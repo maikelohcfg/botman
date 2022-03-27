@@ -2,19 +2,19 @@
 
 namespace BotMan\BotMan\tests;
 
-use Cache;
 use BotMan;
+use BotMan\BotMan\Drivers\Tests\FakeDriver;
+use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use BotMan\BotMan\Tests\Fixtures\TestConversation;
+use Cache;
 use Mockery;
 use Orchestra\Testbench\TestCase;
-use BotMan\BotMan\Drivers\Tests\FakeDriver;
-use BotMan\BotMan\Tests\Fixtures\TestConversation;
-use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 
 class LaravelTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->app['config']->set('cache.default', 'file');

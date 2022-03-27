@@ -1,18 +1,18 @@
 <?php
 
-namespace BotMan\BotMan\Tests;
+namespace BotMan\BotMan\Tests\Cache;
 
+use BotMan\BotMan\Cache\Psr6Cache;
 use Mockery as m;
 use PHPUnit\Framework\TestCase;
 use Psr\Cache\CacheItemInterface;
-use BotMan\BotMan\Cache\Psr6Cache;
 use Psr\Cache\CacheItemPoolInterface;
 
 class Psr6CacheTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }

@@ -2,9 +2,9 @@
 
 namespace BotMan\BotMan\tests\Storages;
 
-use PHPUnit\Framework\TestCase;
-use BotMan\BotMan\Storages\Storage;
 use BotMan\BotMan\Storages\Drivers\FileStorage;
+use BotMan\BotMan\Storages\Storage;
+use PHPUnit\Framework\TestCase;
 
 class StorageTest extends TestCase
 {
@@ -14,14 +14,14 @@ class StorageTest extends TestCase
     /** @var FileStorage */
     protected $driver;
 
-    public function setUp()
+    protected function setUp(): void
     {
         $this->driver = new FileStorage(__DIR__.'/../Fixtures/storage');
         $this->storage = new Storage($this->driver);
         parent::setUp();
     }
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         foreach (glob(__DIR__.'/../Fixtures/storage/*.json') as $file) {
             unlink($file);

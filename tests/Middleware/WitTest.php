@@ -2,21 +2,21 @@
 
 namespace BotMan\BotMan\tests\Middleware;
 
-use Mockery as m;
 use BotMan\BotMan\BotMan;
-use BotMan\BotMan\Http\Curl;
-use PHPUnit\Framework\TestCase;
 use BotMan\BotMan\BotManFactory;
-use BotMan\BotMan\Middleware\Wit;
 use BotMan\BotMan\Cache\ArrayCache;
-use Symfony\Component\HttpFoundation\Response;
+use BotMan\BotMan\Http\Curl;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use BotMan\BotMan\Middleware\Wit;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class WitTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -27,12 +27,12 @@ class WitTest extends TestCase
         $messageText = 'This will be my message text!';
         $message = new IncomingMessage($messageText, '', '');
 
-        $response = new Response(json_encode(['entities' => ['foo' => 'bar']]));
+        $response = new Response(json_encode(['entities' => ['foo' => 'bar'], 'intents' => []]));
 
         $http = m::mock(Curl::class);
-        $http->shouldReceive('post')
+        $http->shouldReceive('get')
             ->once()
-            ->with('https://api.wit.ai/message?q='.urlencode($messageText), [], [], [
+            ->with('https://api.wit.ai/message?q='.urlencode($messageText), [], [
                 'Authorization: Bearer token',
             ])
             ->andReturn($response);
@@ -46,6 +46,7 @@ class WitTest extends TestCase
 
         $this->assertSame([
             'entities' => ['foo' => 'bar'],
+            'intents' => []
         ], $message->getExtras());
     }
 
@@ -58,6 +59,13 @@ class WitTest extends TestCase
         $response = new Response('{
           "msg_id": "eb458be1-43e0-47c0-88b2-efbc9fa3240a",
           "_text": "I am happy",
+          "intents": [
+            {
+              "id": "123456",
+              "name": "emotion",
+              "confidence": 0.7343395827157483
+            }
+          ],
           "entities": {
             "emotion": [
               {
@@ -65,21 +73,15 @@ class WitTest extends TestCase
                 "type": "value",
                 "value": "happy"
               }
-            ],
-            "intent": [
-              {
-                "confidence": 0.7343395827157483,
-                "value": "emotion"
-              }
             ]
           }
         }
         ');
 
         $http = m::mock(Curl::class);
-        $http->shouldReceive('post')
+        $http->shouldReceive('get')
             ->once()
-            ->with('https://api.wit.ai/message?q='.urlencode($messageText), [], [], [
+            ->with('https://api.wit.ai/message?q='.urlencode($messageText), [], [
                 'Authorization: Bearer token',
             ])
             ->andReturn($response);
@@ -102,6 +104,13 @@ class WitTest extends TestCase
         $response = new Response('{
           "msg_id": "eb458be1-43e0-47c0-88b2-efbc9fa3240a",
           "_text": "I am happy",
+          "intents": [
+            {
+              "id": "123456",
+              "name": "emotion",
+              "confidence": 0.343395827157483,
+            }
+          ],
           "entities": {
             "emotion": [
               {
@@ -109,21 +118,15 @@ class WitTest extends TestCase
                 "type": "value",
                 "value": "happy"
               }
-            ],
-            "intent": [
-              {
-                "confidence": 0.343395827157483,
-                "value": "emotion"
-              }
             ]
           }
         }
         ');
 
         $http = m::mock(Curl::class);
-        $http->shouldReceive('post')
+        $http->shouldReceive('get')
             ->once()
-            ->with('https://api.wit.ai/message?q='.urlencode($messageText), [], [], [
+            ->with('https://api.wit.ai/message?q='.urlencode($messageText), [], [
                 'Authorization: Bearer token',
             ])
             ->andReturn($response);
@@ -153,7 +156,7 @@ class WitTest extends TestCase
         $botman = BotManFactory::create([], new ArrayCache, $request);
 
         $http = m::mock(Curl::class);
-        $http->shouldReceive('post')
+        $http->shouldReceive('get')
             ->once()
             ->andReturn(new Response('[]'));
 

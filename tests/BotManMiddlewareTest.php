@@ -3,14 +3,14 @@
 namespace BotMan\BotMan\tests;
 
 use BotMan\BotMan\BotMan;
-use PHPUnit\Framework\TestCase;
 use BotMan\BotMan\BotManFactory;
 use BotMan\BotMan\Drivers\DriverManager;
 use BotMan\BotMan\Drivers\Tests\FakeDriver;
 use BotMan\BotMan\Drivers\Tests\ProxyDriver;
-use Symfony\Component\HttpFoundation\Response;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
 use BotMan\BotMan\Tests\Fixtures\TestCustomMiddleware;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class BotManMiddlewareTest extends TestCase
 {
@@ -19,24 +19,24 @@ class BotManMiddlewareTest extends TestCase
     /** @var FakeDriver */
     private $fakeDriver;
 
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         DriverManager::loadDriver(ProxyDriver::class);
     }
 
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
         DriverManager::unloadDriver(ProxyDriver::class);
     }
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->fakeDriver = new FakeDriver();
         ProxyDriver::setInstance($this->fakeDriver);
         $this->botman = BotManFactory::create([]);
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         ProxyDriver::setInstance(FakeDriver::createInactive());
     }

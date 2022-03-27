@@ -2,21 +2,21 @@
 
 namespace BotMan\BotMan\tests\Middleware;
 
-use Mockery as m;
 use BotMan\BotMan\BotMan;
-use BotMan\BotMan\Http\Curl;
-use PHPUnit\Framework\TestCase;
 use BotMan\BotMan\BotManFactory;
 use BotMan\BotMan\Cache\ArrayCache;
-use BotMan\BotMan\Middleware\ApiAi;
-use Symfony\Component\HttpFoundation\Response;
+use BotMan\BotMan\Http\Curl;
 use BotMan\BotMan\Messages\Incoming\IncomingMessage;
+use BotMan\BotMan\Middleware\ApiAi;
+use Mockery as m;
+use PHPUnit\Framework\TestCase;
+use Symfony\Component\HttpFoundation\Response;
 
 class ApiAiTest extends TestCase
 {
     use \Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 
-    public function tearDown()
+    protected function tearDown(): void
     {
         m::close();
     }
@@ -70,6 +70,10 @@ class ApiAiTest extends TestCase
             'apiActionIncomplete' => false,
             'apiIntent' => 'name of the matched intent',
             'apiParameters' => ['param1' => 'value'],
+            'apiResponseMessages' => [],
+            'apiTextResponses' => [],
+            'apiCustomPayloadResponses' => [],
+            'apiContexts' => [],
         ], $message->getExtras());
     }
 
